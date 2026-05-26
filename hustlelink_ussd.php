@@ -26,7 +26,7 @@ function con(string $message): void
 /**
  * Send an END response (session terminates – user sees a message).
  */
-function end(string $message): void
+function ussd_end(string $message): void
 {
     header('Content-Type: text/plain');
     echo 'END ' . $message;
@@ -74,7 +74,7 @@ if ($level === 0) {
 
 // Exit from home
 if ($level === 1 && $steps[0] === '0') {
-    end("Thank you for using HustleLink. Goodbye!");
+    ussd_end("Thank you for using HustleLink. Goodbye!");
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -128,7 +128,7 @@ if ($steps[0] === '1') {
              * ON DUPLICATE KEY UPDATE name=?, skill=?, location=?, experience=?
              */
 
-            end(
+            ussd_end(
                 "Profile saved!\n\n" .
                 "Name: $name\n" .
                 "Skill: $skill\n" .
@@ -166,7 +166,7 @@ if ($steps[0] === '1') {
             ];
 
             if (!isset($skillMap[$skillFilter])) {
-                end("Invalid option. Please dial again.");
+                ussd_end("Invalid option. Please dial again.");
             }
 
             $selectedSkill = $skillMap[$skillFilter];
@@ -201,7 +201,7 @@ if ($steps[0] === '1') {
 
             // Validate range (1–3 for mock data)
             if ($jobChoice < 1 || $jobChoice > 3) {
-                end("Invalid selection. Dial again to retry.");
+                ussd_end("Invalid selection. Dial again to retry.");
             }
 
             $jobId = 100 + $jobChoice;  // mock ID
@@ -217,7 +217,7 @@ if ($steps[0] === '1') {
              * $sms->send(customerPhone, "An artisan has accepted your job! They will contact you shortly.");
              */
 
-            end(
+            ussd_end(
                 "Job #$jobId accepted!\n\n" .
                 "The customer will be notified.\n" .
                 "They will call you on $phoneNumber.\n\n" .
@@ -245,7 +245,7 @@ if ($steps[0] === '1') {
             ];
 
             if (empty($myJobs)) {
-                end("You have not accepted any jobs yet.\nDial back to browse available jobs.");
+                ussd_end("You have not accepted any jobs yet.\nDial back to browse available jobs.");
             }
 
             $menu = "My Jobs:\n\n";
@@ -254,7 +254,7 @@ if ($steps[0] === '1') {
                 $menu .= "   {$job['location']} | {$job['status']}\n";
             }
 
-            end($menu);
+            ussd_end($menu);
         }
     }
 
@@ -271,7 +271,7 @@ if ($steps[0] === '1') {
 
     // Catch-all invalid artisan input
     if ($level >= 2 && !in_array($artisanChoice, ['1', '2', '3', '0'])) {
-        end("Invalid option. Please dial again.");
+        ussd_end("Invalid option. Please dial again.");
     }
 }
 
@@ -341,7 +341,7 @@ if ($steps[0] === '2') {
              * $sms->sendBulk($artisanPhones, "New job near you: $jobDesc in $location. Dial *384*123# to accept.");
              */
 
-            end(
+            ussd_end(
                 "Job posted!\n\n" .
                 "Skill: $skill\n" .
                 "Job: $jobDesc\n" .
@@ -394,7 +394,7 @@ if ($steps[0] === '2') {
             ];
 
             if (empty($artisans)) {
-                end("No $skill artisans found\nnear $location.\n\nTry a different location\nor post a job request.");
+                ussd_end("No $skill artisans found\nnear $location.\n\nTry a different location\nor post a job request.");
             }
 
             $result = "$skill Artisans near $location:\n\n";
@@ -404,7 +404,7 @@ if ($steps[0] === '2') {
             }
             $result .= "\nCall them directly to hire.";
 
-            end($result);
+            ussd_end($result);
         }
     }
 
@@ -426,7 +426,7 @@ if ($steps[0] === '2') {
             ];
 
             if (empty($myJobs)) {
-                end("You have no posted jobs yet.\nDial back to post a job.");
+                ussd_end("You have no posted jobs yet.\nDial back to post a job.");
             }
 
             $menu = "My Posted Jobs:\n\n";
@@ -435,7 +435,7 @@ if ($steps[0] === '2') {
                 $menu .= "   {$job['skill']} | {$job['status']}\n";
             }
 
-            end($menu);
+            ussd_end($menu);
         }
     }
 
@@ -452,11 +452,11 @@ if ($steps[0] === '2') {
 
     // Catch-all invalid customer input
     if ($level >= 2 && !in_array($customerChoice, ['1', '2', '3', '0'])) {
-        end("Invalid option. Please dial again.");
+        ussd_end("Invalid option. Please dial again.");
     }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
 // CATCH-ALL – invalid home menu input
 // ════════════════════════════════════════════════════════════════════════════
-end("Invalid option. Please dial again.");
+ussd_end("Invalid option. Please dial again.");
