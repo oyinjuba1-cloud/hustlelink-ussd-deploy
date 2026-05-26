@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: hustlelink-ussd
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    branch: main
+    autoDeploy: true
